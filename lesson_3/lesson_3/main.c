@@ -169,7 +169,7 @@ void binary(int N, int *a){
 int binary_serch(int N, int *a, int val){
     int lht = 0, rht = N - 1;
     while(lht <= rht) {
-        int mid = rht / lht;
+        int mid = lht + (rht - lht) / 2;
         if (val == a[mid]) return mid;
         if (val < a[mid]) rht = mid - 1;
         else if ( val > a[mid]) lht = mid + 1;
