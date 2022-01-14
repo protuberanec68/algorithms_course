@@ -14,11 +14,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_CAPACITY 1000
-#define HIGH_LIMIT 1000
+#define MAX_CAPACITY 200
+#define HIGH_LIMIT 100
 
 void counterMain(int, int*);
 int counter_sort(int, int*);
+
+void quickMain(int, int*);
+int quick_sort(int*, int, int);
+int quick_part(int*, int, int);
 
 void bubbleMain(int, int*);
 int bubble_sort(int, int*);
@@ -37,17 +41,20 @@ int main() {
     int arr[MAX_CAPACITY];
     int arr1[MAX_CAPACITY];
     int arr2[MAX_CAPACITY];
+    int arr3[MAX_CAPACITY];
     for(int i = 0; i < MAX_CAPACITY; ++i){
         arr[i] = rand() % HIGH_LIMIT;
         arr1[i] = arr[i];
         arr2[i] = arr[i];
+        arr3[i] = arr[i];
     }
     printf("Given array: ");
     print_arr(MAX_CAPACITY, arr);
     
     counterMain(MAX_CAPACITY, arr);
-    bubbleMain(MAX_CAPACITY, arr1);
-    shakerMain(MAX_CAPACITY, arr2);
+    quickMain(MAX_CAPACITY, arr1);
+    bubbleMain(MAX_CAPACITY, arr2);
+    shakerMain(MAX_CAPACITY, arr3);
     return 0;
 }
 
@@ -58,6 +65,7 @@ void counterMain(int N, int *a){
     print_arr(N, a);
     printf("Count of operations of counter sort - %d\n", count);
 }
+
 int counter_sort(int N, int *a){
     int counter = 0;
     int temp_arr[HIGH_LIMIT];
@@ -79,6 +87,46 @@ int counter_sort(int N, int *a){
     }
     return counter;
 }
+
+//2. Реализовать быструю сортировку.
+void quickMain(int N, int *a){
+    int count = quick_sort(a, 0, N-1);
+    printf("Quick sort: ");
+    print_arr(N, a);
+    printf("Count of operations of quick sort - %d\n", count);
+}
+
+int quick_sort(int *arr, int low, int high){
+    int counter = 1, counter1 = 0, counter2 = 0;
+    if (low < high){
+        int temp = quick_part(arr, low, high);
+        counter1 = quick_sort(arr, low, temp);
+        counter2 = quick_sort(arr, temp+1, high);
+    }
+        return counter + counter1 + counter2;
+}
+
+int quick_part(int *arr, int low, int high){
+    int counter = 0;
+    int mid = arr[(low+high) / 2];
+    int i = low;
+    int j = high;
+    while(1){
+        while(arr[i] < mid){
+            ++counter;
+            ++i;
+        }
+        while(arr[j] > mid){
+            ++counter;
+            --j;
+        }
+        ++counter;
+        if(i >= j)
+            return j;
+        swap(&arr[i++], &arr[j--]);
+    }
+}
+
 
 void bubbleMain(int N, int *a) {
     int counter = bubble_sort(N, a);
