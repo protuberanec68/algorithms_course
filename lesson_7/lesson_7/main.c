@@ -26,7 +26,11 @@ typedef struct matrix Matrix;
 
 Matrix* readMatrix(void);
 void printMatrix(Matrix*);
+
+enum PeakState isused[100];
 void depth_graph_traversal(Matrix*);
+void depth(Matrix*, int);
+
 void breadth_graph_traversal(Matrix*);
 
 int main() {
@@ -41,7 +45,6 @@ int main() {
 }
 
 //1. Написать функции, которые считывают матрицу смежности из файла и выводят ее на экран.
-
 Matrix* readMatrix(void){
     Matrix *tempMatrix = malloc(sizeof(Matrix));
     FILE *file = fopen(FILE_PATH,"r");
@@ -73,8 +76,27 @@ void printMatrix(Matrix* myMatrix){
 
 //2. Написать рекурсивную функцию обхода графа в глубину.
 void depth_graph_traversal(Matrix* myMatrix){
-    
+    for(int i=0; i<myMatrix->size; ++i){
+        isused[i] = nonopened;
+    }
+    printf("\n----------------------------------------\n");
+    printf("Depth graph traversal oreder:\n");
+    depth(myMatrix, 0);
+    printf("\n----------------------------------------\n");
 }
+
+void depth(Matrix *myMatrix, int t){
+    isused[t] = opened;
+    printf("That is %d peak opened\n", t+1);
+    for(int i=0; i<myMatrix->size; ++i){
+        if ((myMatrix->arr[t][i] != 0) && (isused[i] == nonopened)){
+            depth(myMatrix, i);
+        }
+    }
+    isused[t] = closed;
+    printf("That is %d peak closed\n", t+1);
+}
+    
 
 //3. Написать функцию обхода графа в ширину.
 void breadth_graph_traversal(Matrix* myMatrix){
