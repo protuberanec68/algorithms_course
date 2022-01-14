@@ -11,6 +11,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define FILE_PATH "/Users/igorandrianov/Documents/algorithms_course/lesson_7/lesson_7/data.txt"
+
+enum PeakState{
+    nonopened, opened, closed
+};
+
 struct matrix {
     int size;
     int arr[30][30];
@@ -20,7 +26,8 @@ typedef struct matrix Matrix;
 
 Matrix* readMatrix(void);
 void printMatrix(Matrix*);
-
+void depth_graph_traversal(Matrix*);
+void breadth_graph_traversal(Matrix*);
 
 int main() {
     Matrix *temp = readMatrix();
@@ -28,6 +35,8 @@ int main() {
         exit(1);
     }
     printMatrix(temp);
+    depth_graph_traversal(temp);
+    breadth_graph_traversal(temp);
     return 0;
 }
 
@@ -35,7 +44,7 @@ int main() {
 
 Matrix* readMatrix(void){
     Matrix *tempMatrix = malloc(sizeof(Matrix));
-    FILE *file = fopen("/Users/igorandrianov/Documents/algorithms_course/lesson_7/lesson_7/data.txt","r");
+    FILE *file = fopen(FILE_PATH,"r");
     if(file == NULL)
     {
         puts("Can't open file!");
@@ -52,6 +61,7 @@ Matrix* readMatrix(void){
 }
 
 void printMatrix(Matrix* myMatrix){
+    printf("That is matrix:\n");
     printf("%d\n", myMatrix->size);
     for(int i=0; i<myMatrix->size; ++i) {
         for(int j=0; j<myMatrix->size; ++j){
@@ -62,13 +72,44 @@ void printMatrix(Matrix* myMatrix){
 }
 
 //2. Написать рекурсивную функцию обхода графа в глубину.
-
+void depth_graph_traversal(Matrix* myMatrix){
+    
+}
 
 //3. Написать функцию обхода графа в ширину.
-
-
-//Обход всех вершин графа
-//  Если статус Текущей Вершины = 2, то
-//      Для всех вершин смежных Текущей
-//          Если статус смежной=1, то Статус смежной = 2
-//  Статус Текущей = 3
+void breadth_graph_traversal(Matrix* myMatrix){
+    enum PeakState peak[myMatrix->size];
+    for(int i=0; i<myMatrix->size; ++i){
+        peak[i] = nonopened;
+    }
+    printf("\n----------------------------------------\n");
+    printf("Start of breadth graph traversal\n");
+    printf("Status of peaks before traversal:\n");
+    for(int i=0; i<myMatrix->size; ++i){
+        printf("%d ", peak[i]);
+    }
+    printf("\n");
+    
+    peak[0] = opened;
+    printf("Start traversal from 1 peak\n");
+    for(int i=0; i<myMatrix->size; ++i){
+        if (peak[i] == opened){
+            for(int j=0; j<myMatrix->size; ++j){
+                if( myMatrix->arr[i][j] != 0){
+                    if (peak[j] == nonopened){
+                        peak[j] = opened;
+                        printf("That is %d peak opened\n", j+1);
+                    }
+                }
+            }
+        }
+        peak[i] = closed;
+        printf("That is %d peak closed\n", i+1);
+    }
+    printf("Status of peaks after traversal:\n");
+    for(int i=0; i<myMatrix->size; ++i){
+        printf("%d ", peak[i]);
+    }
+    printf("\nEnd of breadth graph traversal\n");
+    printf("----------------------------------------\n");
+}
